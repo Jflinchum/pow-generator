@@ -1,5 +1,6 @@
 from findSentence import sentenceGrab
 from phoneticWords import findPhonetics
+from phoneticIndex import findPhoneticIndex
 from random import randint
 from math import floor
 import sys
@@ -10,8 +11,8 @@ def main():
     library = sys.argv[2]
 
     phonetics = findPhonetics(subject, "/usr/share/dict/web2") 
-    #nearPhoneticNum = phonetics[0][1]
-    #nearestPhonetics = [i for i in phonetics if i[1] == nearPhoneticNum]
+    nearPhoneticNum = phonetics[0][1]
+    phonetics = [i for i in phonetics if i[1] == nearPhoneticNum]
 
     sentences = []
     tries = 10
@@ -31,8 +32,9 @@ def main():
 
     punSentence = sentences[randint(0, floor(len(sentences)/2))]
 
-    punIndex = punSentence.find(punWord)
-    punSentence = punSentence[0:punIndex] + subject + punSentence[punIndex+len(subject):len(punSentence)]
+    sentenceIndex = punSentence.find(punWord)
+    punIndex = findPhoneticIndex(subject, punWord)
+    punSentence = punSentence[0:sentenceIndex + punIndex] + subject + punSentence[sentenceIndex + punIndex + len(subject):len(punSentence)]
     
     print(punSentence)
 

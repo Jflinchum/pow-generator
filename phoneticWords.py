@@ -1,4 +1,5 @@
 import sys
+from phoneticIndex import findPhoneticIndex
 from levenshtein import levenshtein
 from phonetics import metaphone
 
@@ -18,8 +19,10 @@ def findPhonetics(subject, bookshelf):
             line = line.split("\n")[0]
             try:
                 linePhonetic = metaphone(line)
-                if line != subject and line[0] == subject[0] and linePhonetic.find(subPhonetic) != -1:
-                    similar.append((line, levenshtein(line[0:len(subject)], subject)))
+                if line != subject and linePhonetic.find(subPhonetic) != -1:
+                    subjectIndex = findPhoneticIndex(subject, line) 
+                    similar.append((line, levenshtein(line[subjectIndex:subjectIndex+len(subject)], subject)))
+
             except TypeError: 
                 #print("Broke on " + line + "... Continuing")
                 continue
