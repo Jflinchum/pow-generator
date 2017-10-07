@@ -12,6 +12,9 @@ def main():
     dictionary = "/usr/share/dict/words"
 
     phonetics = findPhonetics(subject, dictionary)
+    if len(phonetics) == 0:
+        print("Could not find any phonetic words.")
+        return
     nearPhoneticNum = floor((phonetics[0][1] + phonetics[len(phonetics)-1][1]) / 2)
     phonetics = [i for i in phonetics if i[1] <= nearPhoneticNum]
 
