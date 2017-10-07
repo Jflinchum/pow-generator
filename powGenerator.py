@@ -7,10 +7,11 @@ import sys
 
 
 def main():
-    subject = sys.argv[1]
-    library = sys.argv[2]
+    library = sys.argv[1]
+    subject = sys.argv[2]
+    dictionary = "/usr/share/dict/words"
 
-    phonetics = findPhonetics(subject, "/usr/share/dict/words")
+    phonetics = findPhonetics(subject, dictionary)
     nearPhoneticNum = floor((phonetics[0][1] + phonetics[len(phonetics)-1][1]) / 2)
     phonetics = [i for i in phonetics if i[1] <= nearPhoneticNum]
 
@@ -19,18 +20,21 @@ def main():
     index = 0
     while len(sentences) == 0 and index <= tries:
         if len(phonetics) == 0:
-            print("Reached maximum tries. Ending")
+            print("No more phonetic words. Ending")
             return
         index += 1
-        punWord = phonetics[randint(0, floor((len(phonetics)-1)/2))][0]
+        punWord = phonetics[randint(0, floor(len(phonetics)/2))][0]
         print(punWord)
         sentences = sentenceGrab(punWord, library, True)
         if len(sentences) == 0:
             phonetics = [i for i in phonetics if i[0] != punWord]
             print("Could not find sentence... Trying again")
 
+    if index >= tries:
+        print("Reached maximum tries. Ending")
+        return
 
-    punSentence = sentences[randint(0, floor((len(sentences)-1)/2))]
+    punSentence = sentences[randint(0, len(sentences) - 1)]
 
     sentenceIndex = punSentence.find(punWord)
     punIndex = findPhoneticIndex(subject, punWord)
