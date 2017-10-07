@@ -10,27 +10,27 @@ def main():
     subject = sys.argv[1]
     library = sys.argv[2]
 
-    phonetics = findPhonetics(subject, "/usr/share/dict/web2") 
-    nearPhoneticNum = phonetics[0][1]
-    phonetics = [i for i in phonetics if i[1] == nearPhoneticNum]
+    phonetics = findPhonetics(subject, "/usr/share/dict/words")
+    nearPhoneticNum = floor((phonetics[0][1] + phonetics[len(phonetics)-1][1]) / 2)
+    phonetics = [i for i in phonetics if i[1] <= nearPhoneticNum]
 
     sentences = []
     tries = 10
     index = 0
     while len(sentences) == 0 and index <= tries:
+        if len(phonetics) == 0:
+            print("Reached maximum tries. Ending")
+            return
         index += 1
-        punWord = phonetics[randint(0, floor(len(phonetics)/2))][0]
+        punWord = phonetics[randint(0, floor((len(phonetics)-1)/2))][0]
         print(punWord)
         sentences = sentenceGrab(punWord, library, True)
         if len(sentences) == 0:
             phonetics = [i for i in phonetics if i[0] != punWord]
             print("Could not find sentence... Trying again")
 
-    if len(sentences) == 0:
-        print("Reached maximum tries. Ending")
-        return
 
-    punSentence = sentences[randint(0, floor(len(sentences)/2))]
+    punSentence = sentences[randint(0, floor((len(sentences)-1)/2))]
 
     sentenceIndex = punSentence.find(punWord)
     punIndex = findPhoneticIndex(subject, punWord)
